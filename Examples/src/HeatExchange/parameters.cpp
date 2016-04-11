@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 #include "parameters.hpp"
+
+const char* norm_name[] = {"RN", "H1", "L2"};
+
 std::ostream & operator << (std::ostream & out,const parameters & p)
 {
   out<<"PARAMETER VALUES:"<<"\n";
@@ -15,6 +18,7 @@ std::ostream & operator << (std::ostream & out,const parameters & p)
   out<<"hc= "<<p.hc<<"\n";
   out<<"M= "<<p.M<<"\n";
   out<<"name of the output file= "<<p.outname<<"\n";
-  out<<"output type= "<<p.outtype<<"\n\n";
+  out<<"output type= "<<p.outtype<<"\n";
+  out<<"norm used= "<<norm_name[p.norm]<<"\n\n";
   return out;
 }

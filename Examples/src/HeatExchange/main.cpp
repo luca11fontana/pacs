@@ -64,6 +64,7 @@ int main(int argc, char** argv)
   const auto&    M=param.M; // Number of grid elements
   const auto&    outname=param.outname; // Name of the output file
   const auto&    outtype=param.outtype; // Type of the output
+  const auto&    norm=param.norm; // Type of the norm
   
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
