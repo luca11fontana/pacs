@@ -63,6 +63,7 @@ int main(int argc, char** argv)
   const auto& hc=param.hc; // Convection coefficient
   const auto&    M=param.M; // Number of grid elements
   const auto&    outname=param.outname; // Name of the output file
+  const auto&    outtype=param.outtype; // Type of the output
   
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
@@ -128,20 +129,21 @@ int main(int argc, char** argv)
      std::vector<double> exact(M+1);
 
      cout<<"Result file: "<<outname.data()<<endl;
-     ofstream f(outname.data());
-     for(int m = 0; m<= M; m++)
-       {
-	 // \t writes a tab 
-         f<<m*h*L<<"\t"<<Te*(1.+theta[m])<<"\t"<<thetaa[m]<<endl;
+     if(outtype != "screen") {
+        ofstream f(outname.data());
+        for(int m = 0; m<= M; m++) 
+          f<<m*h*L<<"\t"<<Te*(1.+theta[m])<<"\t"<<thetaa[m]<<endl;
+        f.close();
+     }
+     
 	 // An example of use of tie and tuples!
-         
-	 std::tie(coor[m],sol[m],exact[m])=
-	   std::make_tuple(m*h*L,Te*(1.+theta[m]),thetaa[m]);
-       }
-     // Using temporary files (another nice use of tie)
+     if(outtype != "file"){
+         for(int m = 0; m<= M; m++) 
+	         std::tie(coor[m],sol[m],exact[m])= std::make_tuple(m*h*L,Te*(1.+theta[m]),thetaa[m]);
+       // Using temporary files (another nice use of tie)
      gp<<"plot"<<gp.file1d(std::tie(coor,sol))<<
        "w lp title 'uh',"<< gp.file1d(std::tie(coor,exact))<<
        "w l title 'uex'"<<std::endl;
-     f.close();
+     }
      return status;
 }

@@ -32,6 +32,7 @@ parameters readParameters(std::string const & filename,bool verbose)
   values.hc=ifile("hc",defaults.hc);
   values.M=ifile("M",defaults.M);
   values.outname=ifile("outname", defaults.outname.data());
+  values.outtype=ifile("outtype", defaults.outtype.data());
   if(verbose)
     {
       std::cout<<"PARAMETER VALUES IN GETPOT FILE"<<"\n";

@@ -45,7 +45,7 @@ EXEC=$(exe_sources:.cpp=)
 all: $(DEPEND) $(EXEC)
 
 clean:
-	$(RM) -f $(EXEC) $(OBJS)  *.out *.bak *~ *.aux *.log heat_exchange.pdf
+	$(RM) -f $(EXEC) $(OBJS)  *.out *.bak *~ *.aux *.log *.dat  heat_exchange.pdf
 
 distclean:
 	$(MAKE) clean

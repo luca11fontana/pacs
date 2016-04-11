@@ -2,6 +2,7 @@
 #define HH_Parameters_HH
 #include <iosfwd>
 #include <string>
+
 struct parameters
 {
   //! max number of iteration for Gauss-Siedel
@@ -26,6 +27,8 @@ struct parameters
   int M;
   //! Name of the output file
   std::string outname;
+  // output type
+  std::string outtype;
   //! Constructor takes default values
   parameters():
     itermax(1000000),
@@ -38,7 +41,8 @@ struct parameters
     k(0.164),
     hc(1.e-6*200.),
     M(100),
-    outname("result.dat")
+    outname("result.dat"),
+    outtype("both")
   {}
 };
 //! Prints parameters

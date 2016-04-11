@@ -22,3 +22,5 @@ hc=200.0e-6
 M=11
 # Name of the output file
 outname=result.dat
+# Type of the output
+outtype=both
