@@ -62,6 +62,7 @@ int main(int argc, char** argv)
   const auto& k=param.k;  // Thermal conductivity
   const auto& hc=param.hc; // Convection coefficient
   const auto&    M=param.M; // Number of grid elements
+  const auto&    outname=param.outname; // Name of the output file
   
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
@@ -126,8 +127,8 @@ int main(int argc, char** argv)
      std::vector<double> sol(M+1);
      std::vector<double> exact(M+1);
 
-     cout<<"Result file: result.dat"<<endl;
-     ofstream f("result.dat");
+     cout<<"Result file: "<<outname.data()<<endl;
+     ofstream f(outname.data());
      for(int m = 0; m<= M; m++)
        {
 	 // \t writes a tab 
