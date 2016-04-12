@@ -65,7 +65,7 @@ int main(int argc, char** argv)
   const auto&    outname=param.outname; // Name of the output file
   const auto&    outtype=param.outtype; // Type of the output
   const auto&    norm=param.norm; // Type of the norm
-  
+  cout<<"norm is "<<norm;
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
 
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
   
   for(unsigned int m=0;m <= M;++m)
      theta[m]=(1.-m*h)*(To-Te)/Te;
-  xnew[0] = theta[0];
+  xnew = theta;
   
   // Gauss-Seidel
   // epsilon=||x^{k+1}-x^{k}||
@@ -93,10 +93,27 @@ int main(int argc, char** argv)
        { epsilon=0.;
         for(int m=1;m < M;m++)
 	           xnew[m]  = (xnew[m-1]+theta[m+1])/(2.+h*h*act);
-        xnew[M] = theta[M-1]; 
-        for(int m=1;m <= M;m++)   
-          epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
-	       theta =  xnew; 
+        xnew[M] = theta[M-1];
+
+        switch(norm) {
+          case 1 : { 
+                    for(int m=1;m <= M;m++)   
+                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
+                    break;
+                    }
+          case 2 : { 
+                    for(int m=1;m <= M;m++)   
+                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
+                    break;
+                    }
+          default : { 
+                    for(int m=1;m <= M;m++)   
+                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
+                    break;
+                    }
+	         
+        }
+        theta =  xnew; 
       	 iter=iter+1;     
        }while((sqrt(epsilon) > toler) && (iter < itermax) );
 

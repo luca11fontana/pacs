@@ -25,4 +25,4 @@ outname=myresult.dat
 # Type of the output
 outtype=file
 # Type of the norm (0 = RN, 1 = H1, 2 = L2)
-norm=1
+norm=2
