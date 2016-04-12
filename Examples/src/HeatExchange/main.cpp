@@ -34,6 +34,7 @@ void printHelp()
 int main(int argc, char** argv)
 {
   using namespace std; // avoid std::
+  const char* norm_name[] = {"RN", "H1", "L2"};
   int status(0); // final program status
   GetPot   cl(argc, argv);
   if( cl.search(2, "-h", "--help") )
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
   const auto&    outname=param.outname; // Name of the output file
   const auto&    outtype=param.outtype; // Type of the output
   const auto&    norm=param.norm; // Type of the norm
-  cout<<"norm is "<<norm;
+
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
 
@@ -118,7 +119,7 @@ int main(int argc, char** argv)
        }while((sqrt(epsilon) > toler) && (iter < itermax) );
 
     if(iter<itermax)
-      cout << "M="<<M<<"  Convergence in "<<iter<<" iterations"<<endl;
+      cout << "M="<<M<<"  Convergence in "<<iter<<" iterations using norm "<<norm_name[norm]<<endl;
     else
       {
 	cerr << "NOT CONVERGING in "<<itermax<<" iterations "<<
@@ -145,6 +146,11 @@ int main(int argc, char** argv)
         ofstream f(outname.data());
         for(int m = 0; m<= M; m++) 
           f<<m*h*L<<"\t"<<Te*(1.+theta[m])<<"\t"<<thetaa[m]<<endl;
+        f<<endl<<"using norm "<<norm_name[norm];
+        if(iter<itermax)
+          f<<"  Convergence in "<<iter<<" iterations"<<endl;
+        else
+          f<< "NOT CONVERGING in "<<itermax<<" iterations ";
         f.close();
      }
      
