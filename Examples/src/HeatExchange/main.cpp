@@ -87,7 +87,7 @@ int main(int argc, char** argv)
   // Gauss-Seidel
   // epsilon=||x^{k+1}-x^{k}||
   // Stopping criteria epsilon<=toler
-  
+  double alpha0, alpha1;
   int iter=0;
   double epsilon;
      do
@@ -97,17 +97,20 @@ int main(int argc, char** argv)
         xnew[M] = theta[M-1];
         switch(norm) {
           case 1 : {  //using norm H1
-                    for(int m=1;m <= M;m++)  {  
-                      epsilon += h/6 * ( (xnew[m-1]-theta[m-1])*(xnew[m-1]-theta[m-1]) + (xnew[m]-theta[m])*(xnew[m]-theta[m]) + 
-                        ( xnew[m-1]-theta[m-1] + xnew[m]-theta[m])*(xnew[m-1]-theta[m-1] + xnew[m]-theta[m]) );
-                      epsilon += ( xnew[m]-theta[m] - ( xnew[m-1]-theta[m-1] ) ) * ( xnew[m]-theta[m] - ( xnew[m-1]-theta[m-1] ) ) / h ;
+                    for(int m=1;m <= M;m++)  {
+                      alpha0 = xnew[m-1]-theta[m-1];
+                      alpha1 = xnew[m]-theta[m];
+                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 );
+                      epsilon += ( alpha1 - alpha0 ) * ( alpha1 - alpha0 ) / h ;
                       }
                     break; 
                     }
           case 2 : { //using norm L2
-                    for(int m=1;m <= M;m++)   
-                      epsilon += h/6 * ( (xnew[m-1]-theta[m-1])*(xnew[m-1]-theta[m-1]) + (xnew[m]-theta[m])*(xnew[m]-theta[m]) + 
-                        ( xnew[m-1]-theta[m-1] + xnew[m]-theta[m])*(xnew[m-1]-theta[m-1] + xnew[m]-theta[m]) );
+                    for(int m=1;m <= M;m++) {
+                      alpha0 = xnew[m-1]-theta[m-1];
+                      alpha1 = xnew[m]-theta[m];
+                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 );
+                    }
                     break;
                     }
           default : { //using norm RN
