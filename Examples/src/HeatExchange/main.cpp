@@ -95,9 +95,6 @@ int main(int argc, char** argv)
         for(int m=1;m < M;m++)
 	           xnew[m]  = (xnew[m-1]+theta[m+1])/(2.+h*h*act);
         xnew[M] = theta[M-1];
-        cout<<xnew[5]<<" ";
-
-
         switch(norm) {
           case 1 : {  //using norm H1
                     for(int m=1;m <= M;m++)  {  
