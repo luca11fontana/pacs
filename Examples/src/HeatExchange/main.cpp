@@ -75,52 +75,51 @@ int main(int argc, char** argv)
   
   // Solution vector
   std::vector<double> theta(M+1);
-  std::vector<double> xnew(M+1);
+  std::vector<double> eps(M+1);
 
   // Gauss Siedel is initialised with a linear variation
   // of T
   
   for(unsigned int m=0;m <= M;++m)
      theta[m]=(1.-m*h)*(To-Te)/Te;
-  xnew = theta;
   
   // Gauss-Seidel
   // epsilon=||x^{k+1}-x^{k}||
   // Stopping criteria epsilon<=toler
-  double alpha0, alpha1;
   int iter=0;
-  double epsilon;
+  double epsilon, xnew;
      do
        { epsilon=0.;
-        for(int m=1;m < M;m++)
-	           xnew[m]  = (xnew[m-1]+theta[m+1])/(2.+h*h*act);
-        xnew[M] = theta[M-1];
+        for(int m=1;m < M;m++) {
+	           xnew  = (theta[m-1]+theta[m+1])/(2.+h*h*act);
+             eps[m] = xnew - theta[m];
+             theta[m] = xnew;
+           }
+        xnew = theta[M-1];
+        eps[M] = xnew - theta[M];
+        theta[M] = xnew;
+
         switch(norm) {
           case 1 : {  //using norm H1
                     for(int m=1;m <= M;m++)  {
-                      alpha0 = xnew[m-1]-theta[m-1];
-                      alpha1 = xnew[m]-theta[m];
-                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 ) );
-                      epsilon += ( alpha1 - alpha0 ) * ( alpha1 - alpha0 ) / h ;
+                      epsilon += h/6 * ( eps[m-1]*eps[m-1] + eps[m]*eps[m] + ( eps[m-1] + eps[m])*(eps[m-1] + eps[m] ) );
+                      epsilon += ( eps[m] - eps[m-1] ) * ( eps[m] - eps[m-1] ) / h ;
                       }
                     break; 
                     }
           case 2 : { //using norm L2
                     for(int m=1;m <= M;m++) {
-                      alpha0 = xnew[m-1]-theta[m-1];
-                      alpha1 = xnew[m]-theta[m];
-                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 ) );
+                      epsilon += h/6 * ( eps[m-1]*eps[m-1] + eps[m]*eps[m] + ( eps[m-1] + eps[m])*(eps[m-1] + eps[m] ) );
                     }
                     break;
                     }
           default : { //using norm RN
                     for(int m=1;m <= M;m++)   
-                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
+                      epsilon += eps[m]*eps[m];
                     break;
                     }
 	         
         }
-        theta =  xnew; 
       	 iter=iter+1;     
        }while((sqrt(epsilon) > toler) && (iter < itermax) );
 
