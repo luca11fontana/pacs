@@ -23,6 +23,6 @@ M=11
 # Name of the output file
 outname=resultRN.dat
 # Type of the output
-outtype=file
+outtype=screen
 # Type of the norm (0 = RN, 1 = H1, 2 = L2)
 norm=0

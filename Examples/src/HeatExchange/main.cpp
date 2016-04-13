@@ -76,7 +76,7 @@ int main(int argc, char** argv)
   // Solution vector
   std::vector<double> theta(M+1);
   std::vector<double> xnew(M+1);
-  
+
   // Gauss Siedel is initialised with a linear variation
   // of T
   
@@ -96,18 +96,23 @@ int main(int argc, char** argv)
 	           xnew[m]  = (xnew[m-1]+theta[m+1])/(2.+h*h*act);
         xnew[M] = theta[M-1];
 
+
         switch(norm) {
-          case 1 : { 
+          case 1 : {  //using norm H1
+                    for(int m=1;m <= M;m++)  {  
+                      epsilon += h/6 * ( (xnew[m-1]-theta[m-1])*(xnew[m-1]-theta[m-1]) + (xnew[m]-theta[m])*(xnew[m]-theta[m]) + 
+                        ( xnew[m-1]-theta[m-1] + xnew[m]-theta[m])*(xnew[m-1]-theta[m-1] + xnew[m]-theta[m]) );
+                      epsilon += ( xnew[m]-theta[m] - ( xnew[m-1]-theta[m-1] ) ) * ( xnew[m]-theta[m] - ( xnew[m-1]-theta[m-1] ) ) / h ;
+                      }
+                    break; 
+                    }
+          case 2 : { //using norm L2
                     for(int m=1;m <= M;m++)   
-                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
+                      epsilon += h/6 * ( (xnew[m-1]-theta[m-1])*(xnew[m-1]-theta[m-1]) + (xnew[m]-theta[m])*(xnew[m]-theta[m]) + 
+                        ( xnew[m-1]-theta[m-1] + xnew[m]-theta[m])*(xnew[m-1]-theta[m-1] + xnew[m]-theta[m]) );
                     break;
                     }
-          case 2 : { 
-                    for(int m=1;m <= M;m++)   
-                      epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
-                    break;
-                    }
-          default : { 
+          default : { //using norm RN
                     for(int m=1;m <= M;m++)   
                       epsilon += (xnew[m]-theta[m])*(xnew[m]-theta[m]);
                     break;
@@ -141,8 +146,8 @@ int main(int argc, char** argv)
      std::vector<double> sol(M+1);
      std::vector<double> exact(M+1);
 
-     cout<<"Result file: "<<outname.data()<<endl;
      if(outtype != "screen") {
+        cout<<"Result file: "<<outname.data()<<endl;
         ofstream f(outname.data());
         for(int m = 0; m<= M; m++) 
           f<<m*h*L<<"\t"<<Te*(1.+theta[m])<<"\t"<<thetaa[m]<<endl;
