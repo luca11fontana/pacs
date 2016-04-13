@@ -100,7 +100,7 @@ int main(int argc, char** argv)
                     for(int m=1;m <= M;m++)  {
                       alpha0 = xnew[m-1]-theta[m-1];
                       alpha1 = xnew[m]-theta[m];
-                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 );
+                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 ) );
                       epsilon += ( alpha1 - alpha0 ) * ( alpha1 - alpha0 ) / h ;
                       }
                     break; 
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
                     for(int m=1;m <= M;m++) {
                       alpha0 = xnew[m-1]-theta[m-1];
                       alpha1 = xnew[m]-theta[m];
-                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 );
+                      epsilon += h/6 * ( alpha0*alpha0 + alpha1*alpha1 + ( alpha0 + alpha1)*(alpha0 + alpha1 ) );
                     }
                     break;
                     }
