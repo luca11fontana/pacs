@@ -24,5 +24,3 @@ M=11
 outname=result.dat
 # Type of the output
 outtype=both
-# Norm used (0 = RN, 1 = H1, 2 = L2)
-norm = 0

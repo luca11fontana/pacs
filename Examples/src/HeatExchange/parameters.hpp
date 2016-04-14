@@ -3,8 +3,6 @@
 #include <iosfwd>
 #include <string>
 
-// enum Norm { RN = 0, L2, H1};
-
 struct parameters
 {
   //! max number of iteration for Gauss-Siedel
@@ -31,8 +29,6 @@ struct parameters
   std::string outname;
   // output type
   std::string outtype;
-  // norm type
-  int norm;
   //! Constructor takes default values
   parameters():
     itermax(1000000),
@@ -46,8 +42,7 @@ struct parameters
     hc(1.e-6*200.),
     M(100),
     outname("result.dat"),
-    outtype("both"),
-    norm(0)
+    outtype("both")
   {}
 };
 //! Prints parameters

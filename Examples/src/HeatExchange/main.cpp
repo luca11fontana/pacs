@@ -34,7 +34,6 @@ void printHelp()
 int main(int argc, char** argv)
 {
   using namespace std; // avoid std::
-  const char* norm_name[] = {"RN", "H1", "L2"};
   int status(0); // final program status
   GetPot   cl(argc, argv);
   if( cl.search(2, "-h", "--help") )
@@ -65,7 +64,7 @@ int main(int argc, char** argv)
   const auto&    M=param.M; // Number of grid elements
   const auto&    outname=param.outname; // Name of the output file
   const auto&    outtype=param.outtype; // Type of the output
-  const auto&    norm=param.norm; // Type of the norm
+  
 
   //! Precomputed coefficient for adimensional form of equation
   const auto act=2.*(a1+a2)*hc*L*L/(k*a1*a2);
@@ -74,63 +73,26 @@ int main(int argc, char** argv)
   const auto h=1./M;
   
   // Solution vector
-  std::vector<double> theta(M+1);
-  std::vector<double> eps(M+1);
-
-  // Gauss Siedel is initialised with a linear variation
-  // of T
-  
-  for(unsigned int m=0;m <= M;++m)
-     theta[m]=(1.-m*h)*(To-Te)/Te;
-  
-  // Gauss-Seidel
-  // epsilon=||x^{k+1}-x^{k}||
-  // Stopping criteria epsilon<=toler
-  int iter=0;
-  double epsilon, xnew;
-     do
-       { epsilon=0.;
-        for(int m=1;m < M;m++) {
-	           xnew  = (theta[m-1]+theta[m+1])/(2.+h*h*act);
-             eps[m] = xnew - theta[m];
-             theta[m] = xnew;
-           }
-        xnew = theta[M-1];
-        eps[M] = xnew - theta[M];
-        theta[M] = xnew;
-
-        switch(norm) {
-          case 1 : {  //using norm H1
-                    for(int m=1;m <= M;m++)  {
-                      epsilon += h/6 * ( eps[m-1]*eps[m-1] + eps[m]*eps[m] + ( eps[m-1] + eps[m])*(eps[m-1] + eps[m] ) );
-                      epsilon += ( eps[m] - eps[m-1] ) * ( eps[m] - eps[m-1] ) / h ;
-                      }
-                    break; 
-                    }
-          case 2 : { //using norm L2
-                    for(int m=1;m <= M;m++) {
-                      epsilon += h/6 * ( eps[m-1]*eps[m-1] + eps[m]*eps[m] + ( eps[m-1] + eps[m])*(eps[m-1] + eps[m] ) );
-                    }
-                    break;
-                    }
-          default : { //using norm RN
-                    for(int m=1;m <= M;m++)   
-                      epsilon += eps[m]*eps[m];
-                    break;
-                    }
-	         
-        }
-      	 iter=iter+1;     
-       }while((sqrt(epsilon) > toler) && (iter < itermax) );
-
-    if(iter<itermax)
-      cout << "M="<<M<<"  Convergence in "<<iter<<" iterations using norm "<<norm_name[norm]<<endl;
-    else
-      {
-	cerr << "NOT CONVERGING in "<<itermax<<" iterations "<<
-	  "||dx||="<<sqrt(epsilon)<<endl;
-	status=1;
-      }
+  vector<double> theta(M);
+  double theta0 = To-Te;
+  vector<double> f(M, 0.);
+  vector<double> gamma = f, y = f;
+  f.front() = theta0;
+  vector<double> a(M, 2. + h*h*act);
+  a.back() = 1.;
+  vector<double> b(M, -1.);
+  vector<double> c = b;
+  b.front() = 0;
+  c.back() = 0;
+  gamma[0] = 1 / a[0];
+  for(auto i = 1; i<M; i++)
+  	gamma[i] = 1 / ( a[i] - b[i]*gamma[i-1]*c[i-1] );
+  y[0] = gamma[0]*f[0];
+  for(auto i = 1; i<M; i++)
+  	y[i] = gamma[i]*(f[i] - b[i]*y[i-1]);
+  for(auto i = M-1; i>= 0; i--)
+  	theta[i] = y[i] - gamma[i]*c[i]*theta[i+1];
+  theta.insert (theta.begin(), theta0);
 
  // Analitic solution
 
@@ -150,19 +112,14 @@ int main(int argc, char** argv)
         cout<<"Result file: "<<outname.data()<<endl;
         ofstream f(outname.data());
         for(int m = 0; m<= M; m++) 
-          f<<m*h*L<<"\t"<<Te*(1.+theta[m])<<"\t"<<thetaa[m]<<endl;
-        f<<endl<<"using norm "<<norm_name[norm];
-        if(iter<itermax)
-          f<<"  Convergence in "<<iter<<" iterations"<<endl;
-        else
-          f<< "NOT CONVERGING in "<<itermax<<" iterations ";
+          f<<m*h*L<<"\t"<<Te+theta[m]<<"\t"<<thetaa[m]<<endl;
         f.close();
      }
      
 	 // An example of use of tie and tuples!
      if(outtype != "file"){
          for(int m = 0; m<= M; m++) 
-	         std::tie(coor[m],sol[m],exact[m])= std::make_tuple(m*h*L,Te*(1.+theta[m]),thetaa[m]);
+	         std::tie(coor[m],sol[m],exact[m])= std::make_tuple(m*h*L,Te+theta[m],thetaa[m]);
        // Using temporary files (another nice use of tie)
      gp<<"plot"<<gp.file1d(std::tie(coor,sol))<<
        "w lp title 'uh',"<< gp.file1d(std::tie(coor,exact))<<

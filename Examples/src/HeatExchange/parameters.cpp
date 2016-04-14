@@ -18,7 +18,6 @@ std::ostream & operator << (std::ostream & out,const parameters & p)
   out<<"hc= "<<p.hc<<"\n";
   out<<"M= "<<p.M<<"\n";
   out<<"name of the output file= "<<p.outname<<"\n";
-  out<<"output type= "<<p.outtype<<"\n";
-  out<<"norm used= "<<norm_name[p.norm]<<"\n\n";
+  out<<"output type= "<<p.outtype<<"\n\n";
   return out;
 }
