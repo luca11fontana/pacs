@@ -51,8 +51,6 @@ int main(int argc, char** argv)
   // Transfer parameters to local variables
   // I use references to save memory (not really an issue here, it is just
   // to show a possible  use of references)
-  const int&    itermax= param.itermax;   //max number of iteration for Gauss-Siedel
-  const double& toler=param.toler;   // Tolerance for stopping criterion
   // Here I use auto (remember that you need const and & if you want constant references)
   const auto& L= param.L;  // Bar length
   const auto& a1=param.a1; // First longitudinal dimension
@@ -80,7 +78,7 @@ int main(int argc, char** argv)
   double c = b;
   vector<double> gamma(M, 0.), y(M,0);
   
-  gamma[0] = 1 / a[0];
+  gamma[0] = 1 / a;
   for(auto i = 1; i<M-1; i++)
   	gamma[i] = 1 / ( a - b*gamma[i-1]*c );
   gamma[M-1] = 1 / ( 1 - b*gamma[M-2]*c );
