@@ -75,23 +75,20 @@ int main(int argc, char** argv)
   // Solution vector
   vector<double> theta(M);
   double theta0 = To-Te;
-  vector<double> f(M, 0.);
-  vector<double> gamma = f, y = f;
-  f.front() = theta0;
-  vector<double> a(M, 2. + h*h*act);
-  a.back() = 1.;
-  vector<double> b(M, -1.);
-  vector<double> c = b;
-  b.front() = 0;
-  c.back() = 0;
+  double a(2. + h*h*act);
+  double b(-1);
+  double c = b;
+  vector<double> gamma(M, 0.), y(M,0);
+  
   gamma[0] = 1 / a[0];
+  for(auto i = 1; i<M-1; i++)
+  	gamma[i] = 1 / ( a - b*gamma[i-1]*c );
+  gamma[M-1] = 1 / ( 1 - b*gamma[M-2]*c );
+  y[0] = gamma[0]*theta0;
   for(auto i = 1; i<M; i++)
-  	gamma[i] = 1 / ( a[i] - b[i]*gamma[i-1]*c[i-1] );
-  y[0] = gamma[0]*f[0];
-  for(auto i = 1; i<M; i++)
-  	y[i] = gamma[i]*(f[i] - b[i]*y[i-1]);
+  	y[i] = gamma[i]*( - b*y[i-1]);
   for(auto i = M-1; i>= 0; i--)
-  	theta[i] = y[i] - gamma[i]*c[i]*theta[i+1];
+  	theta[i] = y[i] - gamma[i]*c*theta[i+1];
   theta.insert (theta.begin(), theta0);
 
  // Analitic solution
