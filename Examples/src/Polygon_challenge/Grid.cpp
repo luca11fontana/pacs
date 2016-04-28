@@ -80,6 +80,8 @@ void Grid::read_file( ifstream & ifile)
   }
   alledges.resize(edges_set.size());
   copy(edges_set.begin(), edges_set.end(), alledges.begin());
+  internal.resize(internal_set.size());
+  copy(internal_set.begin(), internal_set.end(), internal.begin());
   // the Boundary set is given as all - internals; I can copy it directly in the vector
   boundary.resize(edges_set.size() - internal_set.size());
   set_difference(edges_set.begin(), edges_set.end(), internal_set.begin(),
@@ -115,6 +117,9 @@ void Grid::print_edges(){
   cout<<std::endl<<"BOUNDARY EDGES: "<<std::endl;
   for(auto i=boundary.begin(); i != boundary.end(); i++)
     cout<<*i;
+   cout<<std::endl<<"INTERNAL EDGES: "<<std::endl;
+  for(auto i=internal.begin(); i != internal.end(); i++)
+    cout<<*i;
 }
 
 void Grid::print_edges_file(){
@@ -129,4 +134,10 @@ void Grid::print_edges_file(){
   for(auto i=boundary.begin(); i != boundary.end(); i++)
     ofile<<*i;
   ofile.close();
+  ofile.open("InternalEdges.txt");
+  ofile<<std::endl<<"INTERNAL EDGES: "<<std::endl;
+  for(auto i=internal.begin(); i != internal.end(); i++)
+    ofile<<*i;
+  ofile.close();
+  
 }

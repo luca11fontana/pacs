@@ -28,6 +28,7 @@ private:
 	std::vector<std::shared_ptr<AbstractPolygon>> polygons;
 	std::vector<Edge> alledges;
 	std::vector<Edge> boundary;
+	std::vector<Edge> internal;
 };
 
 
