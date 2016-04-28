@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <set>
 
 using namespace Geometry;
 
@@ -20,10 +21,12 @@ public:
 	void read_file( std::ifstream & ifile);
 	void print_grid();
 	double total_area();
+	void print_edges();
+	void print_edges_file();
 private:
 	Vertices points;
 	std::vector<std::shared_ptr<AbstractPolygon>> polygons;
-	std::vector<Edge> edges;
+	std::vector<Edge> alledges;
 	std::vector<Edge> boundary;
 };
 

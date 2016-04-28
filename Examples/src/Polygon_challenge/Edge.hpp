@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 using namespace Geometry;
 
@@ -16,10 +17,11 @@ public:
 	//copy constructor
 	Edge(const Edge&) = default;
 	//assignment operator
-	Edge & operator=(Edge&)=default;
+	Edge & operator=(const Edge&)=default;
 	void set(unsigned int, unsigned int);
 	std::array<unsigned int, 2> get() const;
 	friend std::ostream& operator<<(std::ostream&, Edge const&);
+	friend bool operator<(Edge const &e, Edge const &f);
 private:
 	unsigned int a,b;
 };

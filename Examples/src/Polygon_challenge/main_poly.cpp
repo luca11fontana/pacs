@@ -15,6 +15,9 @@ int main()
   mygrid.read_file(ifile);
   mygrid.print_grid();
   mygrid.total_area();
+  mygrid.print_edges();
+  mygrid.print_edges_file();
+
 
 
 

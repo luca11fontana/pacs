@@ -46,6 +46,7 @@ all: $(DEPEND) $(EXEC)
 
 clean:
 	$(RM) -f $(EXEC) $(OBJS)
+	$(RM) *.txt
 
 distclean:
 	$(MAKE) clean

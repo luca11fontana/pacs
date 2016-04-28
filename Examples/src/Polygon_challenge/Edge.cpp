@@ -16,3 +16,11 @@ std::ostream& operator<<(std::ostream& ost, Edge const& ed){
 	return ost;
 };
 
+// overloading of "less than" operator for a 2-dimensional array
+bool operator<(Edge const &e, Edge const &f) {
+	auto aux1 = std::minmax(e.a, e.b);
+	auto aux2 = std::minmax(f.a, f.b);
+	if(aux1.first==aux2.first)
+		return aux1.second < aux2.second;
+	return aux1.first < aux2.first;
+};
