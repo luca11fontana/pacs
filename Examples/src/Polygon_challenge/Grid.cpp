@@ -46,28 +46,25 @@ void Grid::read_file( ifstream & ifile)
     s.erase(s.begin(), s.begin() + 2);
     stringstream ss(s);
     while(getline(ss,s, ' '))
-      v.push_back( points[stoi(s)]);
+      v.emplace_back( points[stoi(s)]);
     if(type=='0'){
-      Triangle p(v);
-      auto pointer = make_shared<Triangle>(p);
-      polygons.push_back(pointer);
+      auto pointer = std::make_shared<Triangle>(Triangle(v));
+      polygons.emplace_back(pointer);
     }
     else if (type == '1'){
-      Square p(v);
-      auto pointer = make_shared<Square>(p);
-      polygons.push_back(pointer);
+      auto pointer = std::make_shared<Square>(Square(v));
+      polygons.emplace_back(pointer);
     }
     else {
-      Polygon p(v);
-      auto pointer = make_shared<Polygon>(p);
-      polygons.push_back(pointer);
+      auto pointer = std::make_shared<Polygon>(Polygon(v));
+      polygons.emplace_back(pointer);
     }
     v.clear();
   }
 
 }
 
-void Grid::print()
+void Grid::print_grid()
 {
   cout<<"Mesh points:"<<endl;
   for(auto i=0; i<points.size(); i++)
