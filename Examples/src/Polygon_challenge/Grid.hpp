@@ -19,6 +19,7 @@ public:
 	Grid & operator=(Grid&)=default;
 	void read_file( ifstream & ifile);
 	void print();
+	double total_area();
 private:
 	Vertices points;
 	vector<shared_ptr<AbstractPolygon>> polygons;

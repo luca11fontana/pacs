@@ -3,12 +3,15 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 using namespace Geometry;
 using namespace std;
 
 void Grid::read_file( ifstream & ifile)
 {
+  points.clear();
+  polygons.clear();
   string s;
   int npoly(0), nvert(0);
 
@@ -32,20 +35,34 @@ void Grid::read_file( ifstream & ifile)
     points.push_back(aux);
   }
 
-  int type, k;
-  vector<int> v;
+  char type;
+  int k;
+  Vertices v;
   for(auto i=0; i<npoly; i++){
     getline(ifile, s);
     k = s.find(" ");
     s.erase(s.begin(), s.begin() + k +1);
-    type = s.front();
+    type = s[0];
     s.erase(s.begin(), s.begin() + 2);
     stringstream ss(s);
-    while(getline(ss,s, ' ')){
-      v.push_back( stoi(s));
-      cout<<stoi(s)<<" ";
+    while(getline(ss,s, ' '))
+      v.push_back( points[stoi(s)]);
+    if(type=='0'){
+      Triangle p(v);
+      auto pointer = make_shared<Triangle>(p);
+      polygons.push_back(pointer);
     }
-    cout<<endl;
+    else if (type == '1'){
+      Square p(v);
+      auto pointer = make_shared<Square>(p);
+      polygons.push_back(pointer);
+    }
+    else {
+      Polygon p(v);
+      auto pointer = make_shared<Polygon>(p);
+      polygons.push_back(pointer);
+    }
+    v.clear();
   }
 
 }
@@ -55,4 +72,19 @@ void Grid::print()
   cout<<"Mesh points:"<<endl;
   for(auto i=0; i<points.size(); i++)
     cout<<i<<": x="<<points[i].x()<<" y="<<points[i].y()<<endl;
+  cout<<"POLYGONS:"<<endl;
+  for(auto i=0; i<polygons.size(); i++){
+    polygons[i]->showMe();
+    cout<<endl;
+  } 
+}
+
+double Grid::total_area()
+{
+  cout<<endl<<"Total area: ";
+  double out;
+  for(auto i=0; i<polygons.size(); i++)
+    out += polygons[i]->area();
+  cout<<out<<endl; 
+  return out;
 }
